@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\students;
-use App\courses;
 
 use Illuminate\Http\Request;
+use App\grades;
+use App\courses;
+use App\students;
 
-class StudentController extends Controller
+class gradeController extends Controller
 {
-    /**
+
+    //<?php
+  /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -16,9 +19,10 @@ class StudentController extends Controller
     public function index()
     {
         //
-        $students=students::all();
-          //dd($students);
-        return view('student',['students'=>$students,'layout'=>'index']);
+        
+        $grades=grades::all();
+        $student=students::all();
+        return view('grade',['students'=>$student,'grades'=>$grades,'layout'=>'index']);
     }
 
     /**
@@ -29,10 +33,12 @@ class StudentController extends Controller
     public function create()
     {
         //
+        
         $courses=courses::all();
-        $students=students::all();
       
-        return view('student',['courses'=>$courses,'students'=>$students,'layout'=>'create']);
+        $students=students::all();
+        $grades=grades::all();
+        return view('grade',['students'=>$students],['courses'=>$courses,'grades'=>$grades,'layout'=>'create']);
         
     }
 
@@ -45,19 +51,16 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //
-        
         $course=new courses();
         $student=new students();
-      // dd( $student);
-       
-       
-        $student->firstName=$request->input('firstName');
-        $student->secondName=$request->input('secondName');
-        $student->age=$request->input('age');
-        $student->courses_id=$request->input('courses_id');     
-       
-        $student->save();
-        return redirect('b/');
+        $grades=new grades();
+        
+        $grades->name=$request->input('name');
+        $grades->courses_id=$request->input('courses_id');
+        $grades->students_id=$request->input('students_id');
+        
+        $grades->save();
+        return redirect('c/');
         
     }
 
@@ -70,10 +73,14 @@ class StudentController extends Controller
     public function show($id)
     {
         //
-        $student=students::find($id);
-        $students=students::all();
         $courses=courses::all();
-         return view('student',[$courses],['students'=>$students,'student'=>$student,'layout'=>'show']);
+        $courses=courses::find($id);
+        $students=students::all();
+        $students=students::find($id);
+
+        $grade=grades::find($id);
+        $grades=grades::all();
+         return view('grade',[$students],[$courses],['grades'=>$grades,'grade'=>$grade,'layout'=>'show']);
     }
 
     /**
@@ -85,9 +92,11 @@ class StudentController extends Controller
     public function edit($id)
     {
         //
-        $student=students::find($id);
-        $students=students::all();
-        return view('student',['students'=>$students,'student'=>$student,'layout'=>'edit']);
+        $grade=grades::find($id);
+       //dd($grade);
+        $grades=grades::all();
+       // dd($grades);
+        return view('grade',['grades'=>$grades,'grade'=>$grade,'layout'=>'edit']);
     }
 
     /**
@@ -100,13 +109,14 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $student=students::find($id);
-       
-        $student->firstName=$request->input('firstName');
-        $student->secondName=$request->input('secondName');
-        $student->age=$request->input('age');
-        $student->save();
-        return redirect('b/');
+        $grade=grades::find($id);
+        //dd($grade);
+        //$grades=grades::all();
+        //dd($grades);    
+        $grade->name=$request->input('name');     
+        
+        $grade->save();
+        return redirect('/c');
     }
 
     /**
@@ -118,12 +128,18 @@ class StudentController extends Controller
     public function destroy($id)
     {
         //
-        $student=students::find($id);
+        $grade=grades::find($id);
 
         
-        $student->delete();
+        $grade->delete();
         
         
-        return redirect('b/' )->with('success','User Deleted');
+        return redirect('c/' )->with('success','User Deleted');
     }
 }
+
+
+
+
+
+

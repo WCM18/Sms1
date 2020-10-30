@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\students;
-use App\courses;
 
 use Illuminate\Http\Request;
+use App\courses;
+use App\classes;
 
-class StudentController extends Controller
+class CourseController extends Controller
 {
+   
     /**
      * Display a listing of the resource.
      *
@@ -16,9 +17,10 @@ class StudentController extends Controller
     public function index()
     {
         //
-        $students=students::all();
-          //dd($students);
-        return view('student',['students'=>$students,'layout'=>'index']);
+      
+       
+        $courses=courses::all();
+        return view('courses',['courses'=>$courses,'layout'=>'index']);
     }
 
     /**
@@ -29,10 +31,14 @@ class StudentController extends Controller
     public function create()
     {
         //
+         //dd($classes);
+        //$classes->classes->id;
+        //dd($classes);
+        $classes=classes::all();
+        
+
         $courses=courses::all();
-        $students=students::all();
-      
-        return view('student',['courses'=>$courses,'students'=>$students,'layout'=>'create']);
+        return view('courses',['classes'=>$classes],['courses'=>$courses,'layout'=>'create']);
         
     }
 
@@ -45,19 +51,17 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //
-        
         $course=new courses();
-        $student=new students();
-      // dd( $student);
+        $classe=new classes();    
+      
        
+        $course->name=$request->input('name');
+        //dd($course);
+        $course->classes_id=$request->input('classes_id');
+        //dd($course);
        
-        $student->firstName=$request->input('firstName');
-        $student->secondName=$request->input('secondName');
-        $student->age=$request->input('age');
-        $student->courses_id=$request->input('courses_id');     
-       
-        $student->save();
-        return redirect('b/');
+        $course->save();
+        return redirect('p/');
         
     }
 
@@ -70,10 +74,11 @@ class StudentController extends Controller
     public function show($id)
     {
         //
-        $student=students::find($id);
-        $students=students::all();
+        $classes=classes::all();
+        $course=courses::find($id);
         $courses=courses::all();
-         return view('student',[$courses],['students'=>$students,'student'=>$student,'layout'=>'show']);
+        //dd($courses);
+         return view('courses',[$classes],['courses'=>$courses,'course'=>$course,'layout'=>'show']);
     }
 
     /**
@@ -85,9 +90,9 @@ class StudentController extends Controller
     public function edit($id)
     {
         //
-        $student=students::find($id);
-        $students=students::all();
-        return view('student',['students'=>$students,'student'=>$student,'layout'=>'edit']);
+        $course=courses::find($id);
+        $courses=courses::all();
+        return view('courses',['courses'=>$courses,'course'=>$course,'layout'=>'edit']);
     }
 
     /**
@@ -100,13 +105,13 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $student=students::find($id);
+        $course=courses::find($id);
        
-        $student->firstName=$request->input('firstName');
-        $student->secondName=$request->input('secondName');
-        $student->age=$request->input('age');
-        $student->save();
-        return redirect('b/');
+       
+       
+        $course->name=$request->input('name');
+        $course->save();
+            return redirect('/p');
     }
 
     /**
@@ -118,12 +123,14 @@ class StudentController extends Controller
     public function destroy($id)
     {
         //
-        $student=students::find($id);
+        $course=courses::find($id);
 
         
-        $student->delete();
+        $course->delete();
         
         
-        return redirect('b/' )->with('success','User Deleted');
+        return redirect('/p' )->with('success','User Deleted');
     }
 }
+
+
